@@ -9,7 +9,7 @@ app = FastAPI()
 
 @app.get("/")
 def on_route():
-    variable = json.dumps({"API": "https://bdscript-api.onrender.com", "Extra": [{"HOST": "https://render.com", "Discord Soporte": "https://discord.gg/dru9uRYKqq"}], "Enpoints": ["/api/discord_users/?token=TOKEN&guild=ID_DE_SERVIDOR", "/api/invite_info/?token=TOKEN&guild=ID_DE_SERVIDOR&member_id=ID_DEL_MIEMBRO"]}, indent=4)
+    variable = json.dumps({"API": "https://bdscript-api.onrender.com", "Extra": [{"HOST": "https://render.com", "Discord Soporte": "https://discord.gg/dru9uRYKqq"}], "Enpoints": ["/api/discord_users/?token=TOKEN&guild=ID_DE_SERVIDOR", "/api/invite_info/?token=TOKEN&guild=ID_DE_SERVIDOR&member_id=ID_DEL_MIEMBRO", "/api/roles_members/?token=TOKEN&guild_id=ID_DE_SERVIDOR [limit=NUMERO&page=NUMERO]", "/api/timestamp/?message=TIEMPO"]}, indent=4)
     return Response(content=variable, media_type="application/json")
 
 @app.get("/api/discord_users/")
@@ -75,7 +75,7 @@ def invite_info(token: str, guild_id: str, member_id: str):
 
     
 def convertir_a_segundos(solicitud):
-    unidades = {'s': 1, 'm': 60, 'h': 3600, 'd': 86400, 'y': 31536000}  # conversiones a segundos
+    unidades = {'s': 1, 'm': 60, 'h': 3600, 'd': 86400, 'y': 31536000}
     resultado = 0
     cantidad = ''
     for caracter in solicitud:

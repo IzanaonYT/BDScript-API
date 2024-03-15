@@ -74,6 +74,7 @@ def invite_info(token: str, guild_id: str, member_id: str):
 
 
     
+@app.get("/api/timestamp/")
 def convertir_a_segundos(solicitud):
     unidades = {'s': 1, 'm': 60, 'h': 3600, 'd': 86400, 'y': 31536000}
     resultado = 0
@@ -91,11 +92,6 @@ def convertir_a_segundos(solicitud):
     expos = {"result": resultado, "code": n}
     return JSONResponse(content=expos, status_code=200)
 
-
-@app.get("/api/timestamp/")
-def utilidades():
-    vs = json.dumps({"GET": 200, "/utils/tils/convert_timestamp.json": "Paramets: message"}, indent=4)
-    return Response(content=vs, media_type="application/json")
 
 
 

@@ -138,3 +138,21 @@ def miembros(token: str, guild_id: int, limit: int = 10, page: int = 1):
             raise HTTPException(status_code=500, detail=f"Error al obtener roles: {roles_response.status_code}")
         if members_response.status_code != 200:
             raise HTTPException(status_code=500, detail=f"Error al obtener miembros: {members_response.status_code}")
+        
+
+
+
+@app.get("/api/user_info/")
+def get_user_info(token: str=None, guild_id: str=None, user_id: str=NotImplemented):
+    if token is None:
+        raise HTTPException(status_code=404, detail="Error: Token no proporcionado")
+    elif guild_id is None:
+        raise HTTPException(status_code=400, detail="Error: ID de servidor no proporcionado")
+    elif user_id is None:
+        raise HTTPException(status_code=400, detail="Error: ID de usuario no proporcionado")
+    
+    headers = {"Authorization": "Bearer " + token, "Content-Type": "application/json"}
+    response = requests.get(f"https://discord.com/api/guilds/{guild_id}/members/{user_id}", headers=headers)
+    if response.status_code == 200:
+        retorno = response.json()
+        return JSONResponse(content={"status": 200, "use_info": [retorno]}, status_code=200)

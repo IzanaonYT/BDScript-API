@@ -143,9 +143,9 @@ def miembros(token: str, guild_id: int, limit: int = 10, page: int = 1):
 
 
 @app.get("/api/user_info/")
-def get_user_info(token: str=None, guild_id: str=None, user_id: str=NotImplemented):
+def get_user_info(token: str=None, guild_id: str=None, user_id: str=None):
     if token is None:
-        raise HTTPException(status_code=404, detail="Error: Token no proporcionado")
+        raise HTTPException(status_code=401, detail="Error: Token no proporcionado")
     elif guild_id is None:
         raise HTTPException(status_code=400, detail="Error: ID de servidor no proporcionado")
     elif user_id is None:

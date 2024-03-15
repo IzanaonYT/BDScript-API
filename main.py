@@ -9,7 +9,8 @@ app = FastAPI()
 
 @app.get("/")
 def on_route():
-    variable = json.dumps({"API": "https://bdscript-api.onrender.com", "Extra": [{"HOST": "https://render.com", "Discord Soporte": "https://discord.gg/dru9uRYKqq"}], "Enpoints": ["/api/discord_users/?token=TOKEN&guild_id=ID_DE_SERVIDOR", "/api/invite_info/?token=TOKEN&guild_id=ID_DE_SERVIDOR&member_id=ID_DEL_MIEMBRO", "/api/roles_members/?token=TOKEN&guild_id=ID_DE_SERVIDOR [limit=NUMERO&page=NUMERO]", "/api/timestamp/?solicitud=TIEMPO"]}, indent=4)
+    variable = json.dumps({"API": "https://bdscript-api.onrender.com", "Extra": [{"HOST": "https://render.com", "Discord Soporte": "https://discord.gg/dru9uRYKqq"}], "Enpoints": ["/api/discord_users/?token=TOKEN&guild_id=ID_DE_SERVIDOR", "/api/invite_info/?token=TOKEN&guild_id=ID_DE_SERVIDOR&member_id=ID_DEL_MIEMBRO", "/api/roles_members/?token=TOKEN&guild_id=ID_DE_SERVIDOR [limit=NUMERO&page=NUMERO]", "/api/timestamp/?solicitud=TIEMPO",
+                                                                                                                                                                                   "/api/user_info/?token=TOKEN&guild_id=ID_SERVIDOR&user_id=ID_USUARIO"]}, indent=4)
     return Response(content=variable, media_type="application/json")
 
 @app.get("/api/discord_users/")
@@ -143,7 +144,7 @@ def miembros(token: str, guild_id: int, limit: int = 10, page: int = 1):
 
 
 @app.get("/api/user_info/")
-def get_user_info(token: str=None, guild_id: str=None, user_id: str=None):
+def get_user_info(token: str=None, guild_id: int=None, user_id: int=None):
     if token is None:
         raise HTTPException(status_code=401, detail="Error: Token no proporcionado")
     elif guild_id is None:
@@ -151,8 +152,12 @@ def get_user_info(token: str=None, guild_id: str=None, user_id: str=None):
     elif user_id is None:
         raise HTTPException(status_code=400, detail="Error: ID de usuario no proporcionado")
     
-    headers = {"Authorization": "Bearer " + token, "Content-Type": "application/json"}
-    response = requests.get(f"https://discord.com/api/guilds/{guild_id}/members/{user_id}", headers=headers)
+    headers = {"Authorization": f"Bot {token}", "Content-Type": "application/json"}
+    url = f"https://discord.com/api/guilds/{guild_id}/members/{user_id}"
+    response = requests.get(url, headers=headers)
+    
     if response.status_code == 200:
         retorno = response.json()
-        return JSONResponse(content={"status": 200, "use_info": [retorno]}, status_code=200)
+        return JSONResponse(content={"status": 200, "user_info": retorno}, status_code=200)
+    else:
+        raise HTTPException(status_code=response.status_code, detail=response.text)

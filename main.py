@@ -101,7 +101,7 @@ def utilidades():
 
 
 @app.get("/api/roles_members/")
-def miembros(guild_id: int, token: str, limit: int = 10, page: int = 1):
+def miembros(token: str, guild_id: int, limit: int = 10, page: int = 1):
     headers = {
         'Authorization': f'Bot {token}',
         'Content-Type': 'application/json'
@@ -139,8 +139,6 @@ def miembros(guild_id: int, token: str, limit: int = 10, page: int = 1):
         }
     else:
         if roles_response.status_code != 200:
-            raise HTTPException(status_code=500, detail=f"Error al obtener roles: {
-                                roles_response.status_code}")
+            raise HTTPException(status_code=500, detail=f"Error al obtener roles: {roles_response.status_code}")
         if members_response.status_code != 200:
-            raise HTTPException(status_code=500, detail=f"Error al obtener miembros: {
-                                members_response.status_code}")
+            raise HTTPException(status_code=500, detail=f"Error al obtener miembros: {members_response.status_code}")

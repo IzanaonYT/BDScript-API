@@ -12,24 +12,87 @@ def on_route():
     variable = json.dumps({"API": "https://{localhost}/api/endpoints.json", "Extra": [{"HOST": "https://render.com", "Discord Soporte": "https://discord.gg/dru9uRYKqq"}]}, indent=4)
     return Response(content=variable, media_type="application/json")
 
-@app.get("/api/discord_users/.json")
+@app.get("/api/discord_users/")
 def discord_users(token: str = None, guild_id: str = None):
     if token is None:
         raise HTTPException(status_code=404, detail="Error: Token no proporcionado")
     elif guild_id is None:
         raise HTTPException(status_code=400, detail="Error: ID de servidor no proporcionado")
 
-    headers = {"Authorization": f"Bearer {token}"}
+    headers = {
+        "Authorization": f"Bot {token}"
+    }
 
     url = f"https://discord.com/api/v8/guilds/{guild_id}/members"
-    response = requests.get(url, headers=headers, params={"limit": 100})
+    response = requests.get(url, headers=headers, params={"limit": 1000})
 
     if response.status_code == 200:
         miembros = response.json()
-        var = {"guild_id": guild_id, "members_ids": []}
-        for member in miembros:
-            var["members_ids"].append(member['user']['id'])
-        return var
+        ids_miembros = [member['user']['id'] for member in miembros]
+        return {"guild_id": guild_id, "members_ids": ids_miembros}
     else:
         raise HTTPException(status_code=response.status_code, detail=response.text)
     
+
+@app.get("/api/invite_info/")
+def invite_info(token: str, guild_id: str, member_id: str):
+    if token is None:
+        raise HTTPException(status_code=404, detail="Error: Token no proporcionado")
+    elif guild_id is None:
+        raise HTTPException(status_code=400, detail="Error: ID de servidor no proporcionado")
+    elif member_id is None:
+        raise HTTPException(status_code=400, detail="Error: ID de miembro no proporcionado")
+    headers = {
+        "Authorization": f"Bot {token}"
+    }
+
+    response = requests.get(
+        f"https://discord.com/api/v9/guilds/{guild_id}/members/{member_id}", headers=headers)
+
+    if response.status_code == 200:
+        member_data = response.json()
+        if "joined_at" in member_data:
+            joined_at = member_data["joined_at"]
+            inviter_id = member_data["user"]["id"]
+
+            invites_response = requests.get(
+                f"https://discord.com/api/v9/guilds/{guild_id}/invites", headers=headers)
+            if invites_response.status_code == 200:
+                invites_data = invites_response.json()
+                for invite in invites_data:
+                    if invite["inviter"]["id"] == inviter_id:
+                        return {
+                            "invitation_code": invite["code"],
+                            "inviter_id": inviter_id,
+                            "joined_at": joined_at
+                        }
+    return JSONResponse(content={"error": "No se encontró información de la invitación", "status": 401}, status_code=401)
+
+
+
+
+
+
+    
+def convertir_a_segundos(solicitud):
+    unidades = {'s': 1, 'm': 60, 'h': 3600, 'd': 86400, 'y': 31536000}  # conversiones a segundos
+    resultado = 0
+    cantidad = ''
+    for caracter in solicitud:
+        if caracter.isdigit():
+            cantidad += caracter
+        elif caracter in unidades:
+            resultado += int(cantidad) * unidades[caracter]
+            cantidad = ''
+    if resultado == 0 :
+        n = 404
+    else:
+        n = 200
+    expos = {"result": resultado, "code": n}
+    return JSONResponse(content=expos, status_code=200)
+
+
+@app.get("/api/timestamp/")
+def utilidades():
+    vs = json.dumps({"GET": 200, "/utils/tils/convert_timestamp.json": "Paramets: message"}, indent=4)
+    return Response(content=vs, media_type="application/json")

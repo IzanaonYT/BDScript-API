@@ -161,3 +161,21 @@ def get_user_info(token: str=None, guild_id: int=None, user_id: int=None):
         return JSONResponse(content={"status": 200, "user_info": retorno}, status_code=200)
     else:
         raise HTTPException(status_code=response.status_code, detail=response.text)
+    
+
+
+def obtener_func(texto, funciones):
+    obtenido = []
+    for funcion in funciones:
+        if funcion in texto:
+            obtenido.append(funcion)
+    return obtenido
+
+@app.get("/api/get_bdfd/")
+def get_bdfd(code: str):
+    url = "https://botdesignerdiscord.com/public/api/function_tag_list"
+    response = requests.get(url)
+    funciones = response.json()
+    obtener = obtener_func(code, funciones)
+    if not len(obtener) == 0:
+        return obtener

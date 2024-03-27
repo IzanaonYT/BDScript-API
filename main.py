@@ -9,7 +9,7 @@ app = FastAPI()
 
 @app.get("/")
 def on_route():
-    variable = json.dumps({"API": "https://bdscript-api.onrender.com", "Extra": [{"HOST": "https://render.com", "Discord Soporte": "https://discord.gg/dru9uRYKqq"}], "Enpoints": ["/api/discord_users/?token=TOKEN&guild_id=ID_DE_SERVIDOR", "/api/invite_info/?token=TOKEN&guild_id=ID_DE_SERVIDOR&member_id=ID_DEL_MIEMBRO", "/api/roles_members/?token=TOKEN&guild_id=ID_DE_SERVIDOR [limit=NUMERO&page=NUMERO]", "/api/timestamp/?solicitud=TIEMPO",
+    variable = json.dumps({"API": "https://bdscript-api.onrender.com", "Extra": [{"HOST": "https://render.com", "Discord Soporte": "https://discord.gg/dru9uRYKqq"}], "Enpoints": ["/api/discord_users/?token=TOKEN&guild_id=ID_DE_SERVIDOR", "/api/invite_info/?token=TOKEN&guild_id=ID_DE_SERVIDOR&member_id=ID_DEL_MIEMBRO", "/api/roles_members/?token=TOKEN&guild_id=ID_DE_SERVIDOR [limit=NUMERO&page=NUMERO]", "/api/timestamp/?solicitud=TIEMPO",  "/api/get_bdfd/?code=CODE BDScript",
                                                                                                                                                                                    "/api/user_info/?token=TOKEN&guild_id=ID_SERVIDOR&user_id=ID_USUARIO"]}, indent=4)
     return Response(content=variable, media_type="application/json")
 

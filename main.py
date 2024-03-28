@@ -1,7 +1,10 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import Response, JSONResponse
+from fastapi import FastAPI, HTTPException, Query
+from fastapi.responses import Response, JSONResponse, StreamingResponse
 import json
 import requests
+from PIL import Image, ImageDraw, ImageFont
+from io import BytesIO
+
 app = FastAPI()
 
 
@@ -179,3 +182,50 @@ def get_bdfd(code: str):
     obtener = obtener_func(code, funciones)
     if not len(obtener) == 0:
         return obtener
+
+
+
+@app.get('/card')
+async def generate_card(avatar: str = Query(...), middle: str = Query(...), name: str = Query(...),
+                        bottom: str = Query(...), textcolor: str = '#FFFFFF', avatarborder: str = '#FFFFFF',
+                        avatarbg: str = '#1F1F1F', background: str = ''):
+    canvas = Image.new('RGB', (768, 375), 'white')
+    ctx = ImageDraw.Draw(canvas)
+
+    if background:
+        if background.startswith('http'):
+            try:
+                response = requests.get(background)
+                bg_image = Image.open(BytesIO(response.content))
+                canvas.paste(bg_image, (0, 0))
+            except:
+                pass
+        elif background.startswith('#') or background.startswith('rgba'):
+            ctx.rectangle([(0, 0), (768, 375)], fill=background)
+
+    font_50 = ImageFont.truetype('arial.ttf', 50)
+    font_40 = ImageFont.truetype('arial.ttf', 40)
+    font_30 = ImageFont.truetype('arial.ttf', 30)
+
+    ctx.textsize(middle, font=font_50)
+    ctx.text((384, 275), middle, fill=textcolor, font=font_50)
+
+    ctx.textsize(name, font=font_40)
+    ctx.text((384, 315), name, fill=textcolor, font=font_40)
+
+    ctx.textsize(bottom, font=font_30)
+    ctx.text((384, 350), bottom, fill=textcolor, font=font_30)
+
+    if avatar:
+        try:
+            response = requests.get(avatar)
+            avatar_image = Image.open(BytesIO(response.content))
+            avatar_image = avatar_image.resize((210, 210))
+            canvas.paste(avatar_image, (279, 25))
+        except:
+            pass
+
+    img_io = BytesIO()
+    canvas.save(img_io, 'PNG')
+    img_io.seek(0)
+    return StreamingResponse(img_io, media_type="image/png")

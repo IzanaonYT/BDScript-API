@@ -196,9 +196,9 @@ def add_roles(token: str, role: Role):
     headers = {
         'Authorization': f'Bot {token}',
     }
-    url = f'https://discord.com/api/v9/guilds/{role.guild_id}/members/{role.user_id}/roles/{role.role_id}'
+    url = f'https://discord.com/api/v8/guilds/{role.guild_id}/members/{role.user_id}/roles/{role.role_id}'
     response = requests.put(url, headers=headers)
     if response.status_code != 200:
-        raise HTTPException(status_code=400, detail="No valido")
+        raise HTTPException(status_code=400, detail=f"No valido: {response.status_code}")
     else:
         return JSONResponse(content={"status": 200, "ROL": f"{role.role_id}"})

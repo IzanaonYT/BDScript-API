@@ -188,14 +188,26 @@ def get_bdfd(code: str):
 
 
 
-@app.get("/api/discord/addroles/")
-def add_roles(token: str, guild_id: int, user_id: int, role_id: int):
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+import requests
+
+app = FastAPI()
+
+class RoleAdditionRequest(BaseModel):
+    guild_id: int
+    user_id: int
+    role_id: int
+    token: str
+
+@app.post("/api/discord/add_role/")
+async def add_role_to_user(request: RoleAdditionRequest):
     headers = {
-        "Authorization": f"Bot {token}",
+        'Authorization': f'Bot {request.token}'
     }
-    url = f"https://discord.com/api/v8/guilds/{guild_id}/members/{user_id}/roles/{role_id}"
+    url = f'https://discord.com/api/v9/guilds/{request.guild_id}/members/{request.user_id}/roles/{request.role_id}'
     response = requests.put(url, headers=headers)
-    if response.status_code != 200:
-        raise HTTPException(status_code=400, detail=f"No válido: {response.status_code}")
+    if response.status_code == 204:
+        return {"message": "Rol agregado exitosamente al usuario."}
     else:
-        return {"status": 200, "ROL": role_id}
+        raise HTTPException(status_code=response.status_code, detail=f"Error al agregar el rol al usuario. Código de estado: {response.status_code}")

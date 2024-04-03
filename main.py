@@ -186,17 +186,14 @@ def get_bdfd(code: str):
 
 
 
-class Role(BaseModel):
-    guild_id: str
-    user_id: str
-    role_id: str
+
 
 @app.get("/api/discord/addroles/")
-def add_roles(token: str, guild_id: str, user_id: str, role_id: str):
+def add_roles(token: str, guild_id: int, user_id: int, role_id: int):
     headers = {
-        'Authorization': f'Bot {token}',
+        "Authorization": f"Bot {token}",
     }
-    url = f'https://discord.com/api/v8/guilds/{guild_id}/members/{user_id}/roles/{role_id}'
+    url = f"https://discord.com/api/v8/guilds/{guild_id}/members/{user_id}/roles/{role_id}"
     response = requests.put(url, headers=headers)
     if response.status_code != 200:
         raise HTTPException(status_code=400, detail=f"No válido: {response.status_code}")

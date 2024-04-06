@@ -222,15 +222,22 @@ def convertir_tiempo(tiempo_unix):
     resultado = ""
     
     if dias > 0:
-        resultado += f"{dias} día{'s' if dias > 1 else ''} "
+        resultado += f"{dias} dia{'s' if dias > 1 else ''}"
+        if horas > 0 or minutos > 0 or segundos > 0:
+            resultado += " y "
     if horas > 0:
-        resultado += f"{horas} hora{'s' if horas > 1 else ''} "
+        resultado += f"{horas} hora{'s' if horas > 1 else ''}"
+        if minutos > 0 or segundos > 0:
+            resultado += " y "
     if minutos > 0:
         resultado += f"{minutos} minuto{'s' if minutos > 1 else ''}"
-    elif segundos > 0 or resultado == "":
+        if segundos > 0:
+            resultado += " y "
+    if segundos > 0:
         resultado += f"{segundos} segundo{'s' if segundos > 1 else ''}"
     
-    return resultado
+    return resultado.strip()
+
 
 @app.get("/api/cooldown/")
 async def convertir_tiempo_endpoint(unix: int):

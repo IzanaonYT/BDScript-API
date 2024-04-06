@@ -232,7 +232,7 @@ def convertir_tiempo(tiempo_unix):
     
     return resultado
 
-@app.get("/api/timestamp/")
+@app.get("/api/cooldown/")
 async def convertir_tiempo_endpoint(unix: int):
     tiempo_legible = convertir_tiempo(unix)
     return {"tiempo_legible": tiempo_legible}

@@ -212,6 +212,8 @@ async def add_role_to_user(request: RoleAdditionRequest):
 
 
 
+
+
 def convertir_tiempo(tiempo_unix):
     dias, segundos = divmod(tiempo_unix, 86400)
     horas, segundos = divmod(segundos, 3600)
@@ -224,14 +226,15 @@ def convertir_tiempo(tiempo_unix):
     if horas > 0:
         resultado += f"{horas} hora{'s' if horas > 1 else ''}, "
     if minutos > 0:
-        resultado += f"{minutos} minuto{'s' if minutos > 1 else ''}, "
-        
-    resultado += f"{segundos} segundo{'s' if segundos > 1 else ''}"
+        resultado += f"{minutos} minuto{'s' if minutos > 1 else ''}"
+    elif segundos > 0 or resultado == "":
+        resultado += f"{segundos} segundo{'s' if segundos > 1 else ''}"
     
     return resultado
 
-@app.get("/api/cooldown/")
+@app.get("/convertir-tiempo/")
 async def convertir_tiempo_endpoint(tiempo_unix: int):
     tiempo_legible = convertir_tiempo(tiempo_unix)
     return {"tiempo_legible": tiempo_legible}
+
 

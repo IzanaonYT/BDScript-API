@@ -188,11 +188,7 @@ def get_bdfd(code: str):
 
 
 
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-import requests
 
-app = FastAPI()
 
 class RoleAdditionRequest(BaseModel):
     guild_id: int
@@ -211,3 +207,31 @@ async def add_role_to_user(request: RoleAdditionRequest):
         return {"message": "Rol agregado exitosamente al usuario."}
     else:
         raise HTTPException(status_code=response.status_code, detail=f"Error al agregar el rol al usuario. Código de estado: {response.status_code}")
+
+
+
+
+
+def convertir_tiempo(tiempo_unix):
+    dias, segundos = divmod(tiempo_unix, 86400)
+    horas, segundos = divmod(segundos, 3600)
+    minutos, segundos = divmod(segundos, 60)
+    
+    resultado = ""
+    
+    if dias > 0:
+        resultado += f"{dias} día{'s' if dias > 1 else ''}, "
+    if horas > 0:
+        resultado += f"{horas} hora{'s' if horas > 1 else ''}, "
+    if minutos > 0:
+        resultado += f"{minutos} minuto{'s' if minutos > 1 else ''}, "
+        
+    resultado += f"{segundos} segundo{'s' if segundos > 1 else ''}"
+    
+    return resultado
+
+@app.get("/api/cooldown/")
+async def convertir_tiempo_endpoint(tiempo_unix: int):
+    tiempo_legible = convertir_tiempo(tiempo_unix)
+    return {"tiempo_legible": tiempo_legible}
+

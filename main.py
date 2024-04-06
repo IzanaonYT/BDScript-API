@@ -222,9 +222,9 @@ def convertir_tiempo(tiempo_unix):
     resultado = ""
     
     if dias > 0:
-        resultado += f"{dias} día{'s' if dias > 1 else ''}, "
+        resultado += f"{dias} día{'s' if dias > 1 else ''} "
     if horas > 0:
-        resultado += f"{horas} hora{'s' if horas > 1 else ''}, "
+        resultado += f"{horas} hora{'s' if horas > 1 else ''} "
     if minutos > 0:
         resultado += f"{minutos} minuto{'s' if minutos > 1 else ''}"
     elif segundos > 0 or resultado == "":
@@ -236,5 +236,3 @@ def convertir_tiempo(tiempo_unix):
 async def convertir_tiempo_endpoint(tiempo_unix: int):
     tiempo_legible = convertir_tiempo(tiempo_unix)
     return {"tiempo_legible": tiempo_legible}
-
-

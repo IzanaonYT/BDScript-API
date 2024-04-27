@@ -24,7 +24,7 @@ def registrar_rutas_desde_directorio(router, directorio):
             if hasattr(modulo, 'router'):
                 router.include_router(modulo.router)
 
-carpeta_api = os.path.join(os.path.dirname(__file__), 'Comandos')
+carpeta_api = os.path.join(os.path.dirname(__file__), 'Rutas')
 router_principal = APIRouter()
 
 registrar_rutas_desde_directorio(router_principal, carpeta_api)

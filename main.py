@@ -40,8 +40,10 @@ def on_route():
                                         "/api/roles_members/?token=TOKEN&guild_id=ID_DE_SERVIDOR [limit=NUMERO&page=NUMERO]", 
                                         "/api/timestamp/?solicitud=TIEMPO",  
                                         "/api/get_bdfd/?code=CODE BDScript",
-                                        "/api//api/emojis_get/?guild_id=ID_SERVIDOR + HEADERNAME: token, VALUE: TOKENBOT"
-                                                                                                                                                                                   "/api/user_info/?token=TOKEN&guild_id=ID_SERVIDOR&user_id=ID_USUARIO"]}, indent=4)
+                                        "/api/api/emojis_get/?guild_id=ID_SERVIDOR + HEADERNAME: token, VALUE: TOKENBOT",
+                                        "/api/user_info/?token=TOKEN&guild_id=ID_SERVIDOR&user_id=ID_USUARIO"]}, indent=4)
+    
+    
     return Response(content=variable, media_type="application/json")
 
 
